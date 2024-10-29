@@ -62,19 +62,37 @@ SELECT p.DNI, p.Apellido, p.Nombre, SUM (c.Duracion) AS cantHoras, AVG(c.Duracio
 FROM Persona p NATURAL JOIN PROFESOR_CURSO pc INNER JOIN CURSO c ON (pc.Cod_Curso = c.Cod_Curso)
 GROUP BY p.DNI, p.Apellido, p.Nombre 
 
+/*Ejercicio 4
+PERSONA = (DNI, Apellido, Nombre, Fecha_Nacimiento, Estado_Civil, Genero)
+ALUMNO = (DNI (fk), Legajo, Año_Ingreso)
+PROFESOR = (DNI (fk), Matricula, Nro_Expediente)
+TITULO = (Cod_Titulo, Nombre, Descripción)
+TITULO-PROFESOR = (Cod_Titulo (fk), DNI (fk), Fecha)
+CURSO = (Cod_Curso, Nombre, Descripción, Fecha_Creacion, Duracion)
+ALUMNO-CURSO = (DNI (fk), Cod_Curso (fk), Año, Desempeño, Calificación)
+PROFESOR-CURSO = (DNI (fk), Cod_Curso (fk), Fecha_Desde, Fecha_Hasta) */
+
 /*7. Listar Nombre y Descripción del curso que posea más alumnos inscriptos y del que posea
 menos alumnos inscriptos durante 2024*/ 
 
-SELECT MAX( 
-    SELECT c.Nombre, c.Descripcion 
-FROM CURSO c NATURAL JOIN Alumno_Curso ac 
-WHERE (ac.Anio BETWEEN 1/1/2024 AND 31/12/2024)
+SELECT c.Nombre, c.Descripcion 
+FROM CURSO c NATURAL JOIN Alumno_Curso 
+WHERE (Anio BETWEEN 1/1/2024 AND 31/12/2024)
 GROUP BY c.Cod_Curso, c.Nombre, c.Descripcion
-HAVING COUNT(ac.DNI)
-), MIN (
-    SELECT c.Nombre, c.Descripcion 
-FROM CURSO c NATURAL JOIN Alumno_Curso ac 
-WHERE (ac.Anio BETWEEN 1/1/2024 AND 31/12/2024)
+HAVING COUNT(*) >= (
+    SELECT COUNT(*)
+    FROM CURSO c NATURAL JOIN Alumno_Curso  
+    WHERE (Anio BETWEEN 1/1/2024 AND 31/12/2024)
+    GROUP BY c.Cod_Curso, c.Nombre, c.Descripcion
+)
+UNION
+SELECT c.Nombre, c.Descripcion 
+FROM CURSO c NATURAL JOIN Alumno_Curso 
+WHERE (Anio BETWEEN 1/1/2024 AND 31/12/2024)
 GROUP BY c.Cod_Curso, c.Nombre, c.Descripcion
-HAVING COUNT(ac.DNI)
+HAVING COUNT(*) <= (
+    SELECT COUNT(*)
+    FROM CURSO c NATURAL JOIN Alumno_Curso  
+    WHERE (Anio BETWEEN 1/1/2024 AND 31/12/2024)
+    GROUP BY c.Cod_Curso, c.Nombre, c.Descripcion
 )

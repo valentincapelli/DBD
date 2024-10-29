@@ -1,0 +1,4 @@
+having para filtrar grupos de tuplas, y where para filtar tuplas
+
+no se pueden usar funciones de agregacion a campos que pueden tener valor null
+
