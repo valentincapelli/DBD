@@ -1,0 +1,3 @@
+Division % en algebra se usa cuando nos piden
+que devolvamos valores que cumplen condiciones para todos
+los casos.
