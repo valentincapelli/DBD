@@ -2,3 +2,5 @@ having para filtrar grupos de tuplas, y where para filtar tuplas
 
 no se pueden usar funciones de agregacion a campos que pueden tener valor null
 
+cuando uso el groupby, ademas del campo por el cual quiero agrupar, debo poner
+los otros campos que puse en el select
