@@ -84,16 +84,16 @@ GROUP BY r.codRep, r.nombre, r.stock
 SELECT t.nombre, t.especialidad
 FROM Tecnico t INNER JOIN Reparacion r ON (t.codTec = r.codTec)
 GROUP BY t.codTec, t.nombre, t.especialidad
-HAVING COUNT(*) >= (
+HAVING COUNT(*) >= ALL (
     SELECT COUNT(*)
     FROM Tecnico t INNER JOIN Reparacion r ON (t.codTec = r.codTec)
     GROUP BY t.codTec, t.nombre, t.especialidad
 )
-UNION ALL
+UNION
 SELECT t.nombre, t.especialidad
 FROM Tecnico t INNER JOIN Reparacion r ON (t.codTec = r.codTec)
 GROUP BY t.codTec, t.nombre, t.especialidad
-HAVING COUNT(*) <= (
+HAVING COUNT(*) <= ALL (
     SELECT COUNT(*)
     FROM Tecnico t INNER JOIN Reparacion r ON (t.codTec = r.codTec)
     GROUP BY t.codTec, t.nombre, t.especialidad
@@ -117,6 +117,18 @@ INNER JOIN Repuesto r ON (rr.codRep = r.codRep)
 WHERE (r.precio BETWEEN 10000 AND 15000)
 
 9_ Consultar!
+SELECT nombre, stock, precio
+FROM Repuesto r
+WHERE NOT EXISTS (
+    SELECT *
+    FROM Tecnico t
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM Reparacion r2 
+        INNER JOIN  RepuestoReparacion rr ON (r2.nroReparac = rr.nroReparac)
+        WHERE (t.codTec = r2.codTec AND r.codRep = rr.codRep)
+    )
+)
 
 10_ Consultar!
 SELECT repa.fecha, t.nombre, repa.precio_total
