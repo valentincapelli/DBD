@@ -3,3 +3,4 @@ El 4.6 de algebra relacional
 El 6.6 de SQL
 El 6.9 de SQL !!!!
 El 6.10 de SQL
+Todo el ejercicio 5 de Algebra
