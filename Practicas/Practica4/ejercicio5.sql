@@ -75,7 +75,7 @@ WHERE NOT EXISTS ((
     WHERE NOT EXISTS (
         SELECT *
         FROM Viaje v
-        WHERE (v.razon_social = a.razon_social)
+        WHERE (v.razon_social = a.razon_social) AND (v.dni = c.dni)
     )
 ))
 

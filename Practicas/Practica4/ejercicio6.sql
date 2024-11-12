@@ -117,6 +117,7 @@ INNER JOIN Repuesto r ON (rr.codRep = r.codRep)
 WHERE (r.precio BETWEEN 10000 AND 15000)
 
 9_ Consultar!
+--Solucion 1
 SELECT nombre, stock, precio
 FROM Repuesto r
 WHERE NOT EXISTS (
@@ -129,8 +130,32 @@ WHERE NOT EXISTS (
         WHERE (t.codTec = r2.codTec AND r.codRep = rr.codRep)
     )
 )
+/*  Paso 1: reconocer tablas de los extremos (donde saco los datos y donde quiero llegar)
+    Paso 2: seleccionar los datos de la tabla donde quiero sacar los datos
+    Paso 3: WHERE NOT EXISTS con la tabla donde quiero llegar
+    Paso 4: WHERE NOT EXISTS con la/s tabla/s intermedia/s.
+    Paso 5: WHERE (conecto tabla intermedia con tabla donde quiero llegar) AND
+            (conecto tabla intermedia con tabla donde selecciono datos)
+    */
+--Solucion explicada
 
-10_ Consultar!
+-- Agarro la tabla que selecciono los datos
+SELECT r.nombre, r.stock, r.precio
+FROM Repuesto r
+-- Agarro la tabla a la que quiero llegar
+WHERE NOT EXISTS (
+    SELECT *
+    FROM Tecnico t
+    -- Agarro la/s tabla/s intermedio, la que las une
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM RepuestoReparacion rr
+        INNER JOIN Reparacion repa ON (rr.nroReparac = repa.nroReparac)
+        WHERE (t.codTec = repa.codTec) AND (r.codRep = rr.codRep)
+    )
+)
+
+10_ 
 SELECT repa.fecha, t.nombre, repa.precio_total
 FROM RepuestoReparacion rr
 INNER JOIN Reparacion repa ON (rr.nroReparac = repa.nroReparac)
